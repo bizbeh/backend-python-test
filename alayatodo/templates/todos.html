@@ -1,36 +1,77 @@
 {% extends "layout.html" %}
 
 {% block content %}
+
 <div class="col-md-4 col-md-offset-4">
     <h1>Todo List:</h1>
-    <table class="table table-striped">
-        <th>#</th><th>User</th><th>Description</th><th></th>
-        {% for todo in todos %}
-            <tr>
-                <td>{{ todo.id }}</td>
-                <td>{{ todo.user_id }}</td>
-                <td>
-                    <a href="{{ url_for('todo', id=todo.id) }}">
-                       {{ todo.description }}
-                    </a>
-                </td>
-                <td>
-                    <form method="post" action="{{ url_for('todo_delete', id=todo.id) }}">
-                        <button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove glyphicon-white"></span></button>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
+    <table>
         <tr>
-            <form method="post" action="{{ url_for('todos_POST') }}">
-                <td colspan="3">
-                    <input type="textbox" name="description" class="small-6 small-center" placeholder="Description...">
-                </td>
-                <td>
-                    <button type="submit" class="btn btn-sm btn-primary">Add</button>
-                </td>
-            </form>
+            <table class="table table-striped">
+                <th>#</th><th>User</th><th>Description</th><th></th><th>Status</th>
+                {% for todo in todos %}
+                    <tr>
+                        <td>{{ todo.id }}</td>
+                        <td>{{ todo.user_id }}</td>
+                        <td>
+                            <a href="{{ url_for('todo', id=todo.id) }}">
+                               {{ todo.description }}
+                            </a>
+                        </td>
+                        <td>
+                            <form method="post" action="{{ url_for('todo_delete', id=todo.id) }}">
+                                <button type="submit" class="btn btn-xs btn-danger"><span class="glyphicon glyphicon-remove glyphicon-white"></span></button>
+                            </form>
+                        </td>
+                        <td>
+                            {% if todo.complete == 0 %}
+                                <form method="post" action="{{ url_for('todo_complete', id=todo.id) }}">
+                                    <button type="submit" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-question-sign"></span></button>
+                                </form>
+                            {% else%}
+                                <form method="post" action="{{ url_for('todo_Nothing', id=todo.id) }}">
+                                    <button type="submit" class="btn btn-xs btn-success"><span class="glyphicon glyphicon-ok-sign glyphicon-white"></span></button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <form method="post" action="{{ url_for('todos_POST') }}">
+                        <td colspan="3">
+                            <input type="textbox" name="description" class="small-6 small-center" placeholder="Description...">
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-sm btn-primary">Add</button>
+                        </td>
+                    </form>
+                </tr>
+            </table>
+        </tr>
+        <tr>
+            <div>
+            <ul class="pagination">
+                <table>
+                    <td colspan="3">
+                    <form method="post" action="{{ url_for('todo_Pre', idx = cur) }}">
+                        <button type="submit" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-arrow-left"></span></button>
+                    </form>
+                        </td>
+                        <td>
+                    <li><a class="active" href="#">{{cur}}</a></li>
+                            </td>
+                        <td>
+                    <form method="post" action="{{ url_for('todo_Next', idx = cur) }}">
+                        <button type="submit" class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-arrow-right"></span></button>
+                    </form>
+                    </td>
+                </table>
+            </ul>
+            </div>
         </tr>
     </table>
 </div>
+
+
+
+
 {% endblock %}
